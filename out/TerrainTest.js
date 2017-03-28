@@ -33,7 +33,7 @@ var feng3d;
             canvasImg.height = 2048;
             var ctxt = canvasImg.getContext('2d');
             var loadedNum = 0;
-            var imagePaths = ['terrain_heights.jpg', 'terrain_diffuse.jpg', 'terrain_splats.png', 'beach.jpg', 'grass.jpg', 'rock.jpg'];
+            var imagePaths = ['terrain_heights.jpg', 'terrain_diffuse.jpg', 'terrain_splats.png', 'beach.jpg', 'grass.jpg', 'rock.jpg', 'brush.png'];
             var images = [];
             for (var i = 0; i < imagePaths.length; i++) {
                 var image = images[i] = new Image();
@@ -44,7 +44,7 @@ var feng3d;
                         var heightImage = images[0];
                         ctxt.drawImage(heightImage, 0, 0);
                         var terrainHeightData = ctxt.getImageData(0, 0, heightImage.width, heightImage.height); //读取整张图片的像素。
-                        ctxt.putImageData(terrainHeightData, terrainHeightData.width, terrainHeightData.height);
+                        // ctxt.putImageData(terrainHeightData, terrainHeightData.width, terrainHeightData.height)
                         //
                         terrain = new feng3d.Object3D("terrain");
                         terrain.getOrCreateComponentByClass(feng3d.Model).geometry = new feng3d.TerrainGeometry(terrainHeightData);
@@ -55,6 +55,7 @@ var feng3d;
                         terrainMaterial.splatTexture2 = new feng3d.Texture2D(images[4]);
                         terrainMaterial.splatTexture3 = new feng3d.Texture2D(images[5]);
                         terrainMaterial.splatRepeats = new feng3d.Vector3D(1, 50, 150, 100);
+                        terrainMaterial.brushTexture = new feng3d.Texture2D(images[6]);
                         terrain.getOrCreateComponentByClass(feng3d.Model).material = terrainMaterial;
                         scene.addChild(terrain);
                     }

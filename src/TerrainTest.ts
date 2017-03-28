@@ -1,10 +1,13 @@
-module feng3d {
-    export class TerrainTest {
+module feng3d
+{
+    export class TerrainTest
+    {
         view3D: View3D;
         controller: FPSController;
         cameraObj: Object3D;
 
-        constructor() {
+        constructor()
+        {
 
             this.init();
 
@@ -23,22 +26,26 @@ module feng3d {
             input.addEventListener("mouseup", this.onMouseup, this);
         }
 
-        private onMousedown() {
+        private onMousedown()
+        {
 
             this.controller.target = this.cameraObj.transform;
         }
 
-        private onMouseup() {
+        private onMouseup()
+        {
 
             this.controller.target = null;
         }
 
-        process() {
+        process()
+        {
 
             this.controller.update();
         }
 
-        init() {
+        init()
+        {
             var canvas = document.getElementById("glcanvas");
             this.view3D = new View3D(canvas);
 
@@ -51,18 +58,21 @@ module feng3d {
             var ctxt = canvasImg.getContext('2d');
 
             var loadedNum = 0;
-            var imagePaths = ['terrain_heights.jpg', 'terrain_diffuse.jpg', 'terrain_splats.png', 'beach.jpg', 'grass.jpg', 'rock.jpg'];
+            var imagePaths = ['terrain_heights.jpg', 'terrain_diffuse.jpg', 'terrain_splats.png', 'beach.jpg', 'grass.jpg', 'rock.jpg', 'brush.png'];
             var images: HTMLImageElement[] = [];
-            for (var i = 0; i < imagePaths.length; i++) {
+            for (var i = 0; i < imagePaths.length; i++)
+            {
                 var image = images[i] = new Image();
-                image.onload = function () {
+                image.onload = function ()
+                {
                     loadedNum++;
-                    if (loadedNum == imagePaths.length) {
+                    if (loadedNum == imagePaths.length)
+                    {
                         //获取高度图
                         var heightImage = images[0];
                         ctxt.drawImage(heightImage, 0, 0);
                         var terrainHeightData = ctxt.getImageData(0, 0, heightImage.width, heightImage.height);//读取整张图片的像素。
-                        ctxt.putImageData(terrainHeightData, terrainHeightData.width, terrainHeightData.height)
+                        // ctxt.putImageData(terrainHeightData, terrainHeightData.width, terrainHeightData.height)
                         //
                         terrain = new Object3D("terrain");
                         terrain.getOrCreateComponentByClass(Model).geometry = new TerrainGeometry(terrainHeightData);
@@ -73,6 +83,8 @@ module feng3d {
                         terrainMaterial.splatTexture2 = new Texture2D(images[4]);
                         terrainMaterial.splatTexture3 = new Texture2D(images[5]);
                         terrainMaterial.splatRepeats = new Vector3D(1, 50, 150, 100);
+                        terrainMaterial.brushTexture = new Texture2D(images[6]);
+                        
 
                         terrain.getOrCreateComponentByClass(Model).material = terrainMaterial;
                         scene.addChild(terrain);
@@ -80,8 +92,8 @@ module feng3d {
                 }
                 image.src = 'resources/terrain/' + imagePaths[i];
             }
-
         }
+
     }
 }
 

@@ -56,6 +56,13 @@ var feng3d;
                         terrainMaterial.splatTexture3 = new feng3d.Texture2D(images[5]);
                         terrainMaterial.splatRepeats = new feng3d.Vector3D(1, 50, 150, 100);
                         terrainMaterial.brushTexture = new feng3d.Texture2D(images[6]);
+                        terrainMaterial.brushTexture.wrapS = feng3d.GL.CLAMP_TO_EDGE;
+                        terrainMaterial.brushTexture.wrapT = feng3d.GL.CLAMP_TO_EDGE;
+                        terrainMaterial.brushUVScaleOffset.x = 2;
+                        terrainMaterial.brushUVScaleOffset.y = 2;
+                        terrainMaterial.brushUVScaleOffset.z = 0.2;
+                        terrainMaterial.brushUVScaleOffset.w = 0.2;
+                        brushUVScaleOffset = terrainMaterial.brushUVScaleOffset;
                         terrain.getOrCreateComponentByClass(feng3d.Model).material = terrainMaterial;
                         scene.addChild(terrain);
                     }
@@ -68,4 +75,5 @@ var feng3d;
 })(feng3d || (feng3d = {}));
 new feng3d.TerrainTest();
 var terrain;
+var brushUVScaleOffset;
 //# sourceMappingURL=TerrainTest.js.map

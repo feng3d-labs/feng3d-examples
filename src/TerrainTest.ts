@@ -42,6 +42,10 @@ module feng3d
         {
 
             this.controller.update();
+
+            this.view3D.getMouseRay3D();
+            //计算鼠标射线与地形的交点
+            terrain
         }
 
         init()
@@ -84,7 +88,13 @@ module feng3d
                         terrainMaterial.splatTexture3 = new Texture2D(images[5]);
                         terrainMaterial.splatRepeats = new Vector3D(1, 50, 150, 100);
                         terrainMaterial.brushTexture = new Texture2D(images[6]);
-                        
+                        terrainMaterial.brushTexture.wrapS = GL.CLAMP_TO_EDGE;
+                        terrainMaterial.brushTexture.wrapT = GL.CLAMP_TO_EDGE;
+                        terrainMaterial.brushUVScaleOffset.x = 2;
+                        terrainMaterial.brushUVScaleOffset.y = 2;
+                        terrainMaterial.brushUVScaleOffset.z = 0.2;
+                        terrainMaterial.brushUVScaleOffset.w = 0.2;
+                        brushUVScaleOffset = terrainMaterial.brushUVScaleOffset;
 
                         terrain.getOrCreateComponentByClass(Model).material = terrainMaterial;
                         scene.addChild(terrain);
@@ -100,3 +110,4 @@ module feng3d
 new feng3d.TerrainTest();
 
 var terrain;
+var brushUVScaleOffset: feng3d.Vector3D;

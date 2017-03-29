@@ -23,6 +23,15 @@ var feng3d;
         }
         process() {
             this.controller.update();
+            if (terrainGeometry) {
+                //获取鼠标射线
+                var ray = this.view3D.getMouseRay3D();
+                //射线转换到模型空间
+                var inverseGlobalMatrix3D = terrain.transform.inverseGlobalMatrix3D;
+                inverseGlobalMatrix3D.transformVector(ray.position, ray.position);
+                inverseGlobalMatrix3D.deltaTransformVector(ray.direction, ray.direction);
+                terrainGeometry.intersectionRay(ray);
+            }
         }
         init() {
             var canvas = document.getElementById("glcanvas");
@@ -47,7 +56,7 @@ var feng3d;
                         // ctxt.putImageData(terrainHeightData, terrainHeightData.width, terrainHeightData.height)
                         //
                         terrain = new feng3d.Object3D("terrain");
-                        terrain.getOrCreateComponentByClass(feng3d.Model).geometry = new feng3d.TerrainGeometry(terrainHeightData);
+                        terrainGeometry = terrain.getOrCreateComponentByClass(feng3d.Model).geometry = new feng3d.TerrainGeometry(terrainHeightData);
                         var terrainMaterial = new feng3d.TerrainMaterial();
                         terrainMaterial.diffuseTexture = new feng3d.Texture2D(images[1]);
                         terrainMaterial.blendTexture = new feng3d.Texture2D(images[2]);
@@ -76,4 +85,5 @@ var feng3d;
 new feng3d.TerrainTest();
 var terrain;
 var brushUVScaleOffset;
+var terrainGeometry;
 //# sourceMappingURL=TerrainTest.js.map

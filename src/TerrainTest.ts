@@ -42,10 +42,16 @@ module feng3d
         {
 
             this.controller.update();
-
-            this.view3D.getMouseRay3D();
-            //计算鼠标射线与地形的交点
-            terrain
+            if (terrainGeometry)
+            {
+                //获取鼠标射线
+                var ray = this.view3D.getMouseRay3D();
+                //射线转换到模型空间
+                var inverseGlobalMatrix3D = terrain.transform.inverseGlobalMatrix3D
+                inverseGlobalMatrix3D.transformVector(ray.position, ray.position);
+                inverseGlobalMatrix3D.deltaTransformVector(ray.direction, ray.direction);
+                terrainGeometry.intersectionRay(ray);
+            }
         }
 
         init()
@@ -79,7 +85,7 @@ module feng3d
                         // ctxt.putImageData(terrainHeightData, terrainHeightData.width, terrainHeightData.height)
                         //
                         terrain = new Object3D("terrain");
-                        terrain.getOrCreateComponentByClass(Model).geometry = new TerrainGeometry(terrainHeightData);
+                        terrainGeometry = terrain.getOrCreateComponentByClass(Model).geometry = new TerrainGeometry(terrainHeightData);
                         var terrainMaterial = new TerrainMaterial();
                         terrainMaterial.diffuseTexture = new Texture2D(images[1]);
                         terrainMaterial.blendTexture = new Texture2D(images[2]);
@@ -109,5 +115,6 @@ module feng3d
 
 new feng3d.TerrainTest();
 
-var terrain;
+var terrain: feng3d.Object3D;
 var brushUVScaleOffset: feng3d.Vector3D;
+var terrainGeometry: feng3d.TerrainGeometry;

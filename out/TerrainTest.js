@@ -30,7 +30,11 @@ var feng3d;
                 var inverseGlobalMatrix3D = terrain.transform.inverseGlobalMatrix3D;
                 inverseGlobalMatrix3D.transformVector(ray.position, ray.position);
                 inverseGlobalMatrix3D.deltaTransformVector(ray.direction, ray.direction);
-                terrainGeometry.intersectionRay(ray);
+                var result = terrainGeometry.intersectionRay(ray);
+                if (result) {
+                    brushUVScaleOffset.z = -(result.x / images[6].width - 0.5);
+                    brushUVScaleOffset.w = -((images[1].height - result.y) / images[6].height - 0.5);
+                }
             }
         }
         init() {
@@ -43,7 +47,7 @@ var feng3d;
             var ctxt = canvasImg.getContext('2d');
             var loadedNum = 0;
             var imagePaths = ['terrain_heights.jpg', 'terrain_diffuse.jpg', 'terrain_splats.png', 'beach.jpg', 'grass.jpg', 'rock.jpg', 'brush.png'];
-            var images = [];
+            images = [];
             for (var i = 0; i < imagePaths.length; i++) {
                 var image = images[i] = new Image();
                 image.onload = function () {
@@ -67,10 +71,12 @@ var feng3d;
                         terrainMaterial.brushTexture = new feng3d.Texture2D(images[6]);
                         terrainMaterial.brushTexture.wrapS = feng3d.GL.CLAMP_TO_EDGE;
                         terrainMaterial.brushTexture.wrapT = feng3d.GL.CLAMP_TO_EDGE;
-                        terrainMaterial.brushUVScaleOffset.x = 2;
-                        terrainMaterial.brushUVScaleOffset.y = 2;
-                        terrainMaterial.brushUVScaleOffset.z = 0.2;
-                        terrainMaterial.brushUVScaleOffset.w = 0.2;
+                        terrainMaterial.brushTexture.generateMipmap = false;
+                        terrainMaterial.brushTexture.minFilter = feng3d.GL.LINEAR;
+                        terrainMaterial.brushUVScaleOffset.x = images[1].width / images[6].width;
+                        terrainMaterial.brushUVScaleOffset.y = images[1].height / images[6].height;
+                        terrainMaterial.brushUVScaleOffset.z = 0;
+                        terrainMaterial.brushUVScaleOffset.w = 0;
                         brushUVScaleOffset = terrainMaterial.brushUVScaleOffset;
                         terrain.getOrCreateComponentByClass(feng3d.Model).material = terrainMaterial;
                         scene.addChild(terrain);
@@ -86,4 +92,5 @@ new feng3d.TerrainTest();
 var terrain;
 var brushUVScaleOffset;
 var terrainGeometry;
+var images;
 //# sourceMappingURL=TerrainTest.js.map
